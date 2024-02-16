@@ -1,0 +1,153 @@
+CREATE TABLE User
+(
+    UserID	INT NOT NULL,
+    Username	VARCHAR(50),
+    Verified	VARCHAR(10),
+    Followers	INT,
+    PRIMARY KEY (UserID)
+);
+
+INSERT INTO User (UserID, Username, Verified, Followers) VALUES ('10001', 'MelonHusk', 'true', '22049');
+INSERT INTO User (UserID, Username, Verified, Followers) VALUES ('10002', 'DonaldDuck', 'true', '149195');
+INSERT INTO User (UserID, Username, Verified, Followers) VALUES ('10003', 'KamKirl', 'false', '207464');
+INSERT INTO User (UserID, Username, Verified, Followers) VALUES ('10004', 'JustForLaughs', 'true', '22019');
+INSERT INTO User (UserID, Username, Verified, Followers) VALUES ('10005', 'TheRock', 'false', '221749');
+INSERT INTO User (UserID, Username, Verified, Followers) VALUES ('10006', 'ReynoldsFan', 'false', '65449');
+INSERT INTO User (UserID, Username, Verified, Followers) VALUES ('10007', 'SkullPoopL', 'false', '6511789');
+INSERT INTO User (UserID, Username, Verified, Followers) VALUES ('10008', 'PingFinity', 'true', '5464198');
+INSERT INTO User (UserID, Username, Verified, Followers) VALUES ('10009', 'HugeAckman', 'false', '1981497');
+INSERT INTO User (UserID, Username, Verified, Followers) VALUES ('10010', 'SnakeShot', 'true', '47896');
+
+
+CREATE TABLE Tweet 
+(
+    TweetID	INT NOT NULL,
+    UserID	INT NOT NULL,
+    Content	VARCHAR(200),
+    PRIMARY KEY (TweetID),
+    FOREIGN KEY (UserID) REFERENCES User (UserID) ON DELETE CASCADE
+);
+
+INSERT INTO Tweet (TweetID, UserID, Content) VALUES ('20001', '10002', 'Pretty sure that the world is just Duckburg');
+INSERT INTO Tweet (TweetID, UserID, Content) VALUES ('20002', '10003', 'If you know what is good for you, you should do it.');
+INSERT INTO Tweet (TweetID, UserID, Content) VALUES ('20003', '10004', 'Why the good die young and the bad go to hell?');
+INSERT INTO Tweet (TweetID, UserID, Content) VALUES ('20004', '10005', 'Having snow in your shoe is as much fun as having warm beer.');
+INSERT INTO Tweet (TweetID, UserID, Content) VALUES ('20005', '10007', 'Ice bucket challenge');
+INSERT INTO Tweet (TweetID, UserID, Content) VALUES ('20006', '10008', 'Because science, right?');
+INSERT INTO Tweet (TweetID, UserID, Content) VALUES ('20007', '10009', 'Did you know that the number of Nick Cage films correlate with drowning in pool?');
+INSERT INTO Tweet (TweetID, UserID, Content) VALUES ('20008', '10001', 'Make sure you brush your hair before going to bed.');
+INSERT INTO Tweet (TweetID, UserID, Content) VALUES ('20009', '10002', 'Bear, beer, beard, bird, turd. Bears are made of poop.');
+INSERT INTO Tweet (TweetID, UserID, Content) VALUES ('20010', '10010', "Rock 'n roll all night long with your best friends!");
+
+CREATE TABLE Comments 
+(
+    CommentID	INT NOT NULL,
+    UserID	INT NOT NULL,
+    TweetID	INT,
+    FK_CommentID	INT,
+    Content	VARCHAR(200),
+    PRIMARY KEY (CommentID),
+    FOREIGN KEY (UserID) REFERENCES User (UserID) ON DELETE CASCADE,
+    FOREIGN KEY (TweetID) REFERENCES Tweet (TweetID) ON DELETE CASCADE,
+    FOREIGN KEY (FK_CommentID) REFERENCES Comments (CommentID) ON DELETE CASCADE
+);
+
+INSERT INTO Comments (CommentID, UserID, TweetID, FK_CommentID, Content) VALUES ('30001', '10002', '20001', null, 'And Scrooge is the richest living being in the world.');
+INSERT INTO Comments (CommentID, UserID, TweetID, FK_CommentID, Content) VALUES ('30002', '10003', '20002', null, "What if you don't know what is good for you? Do things to find out?");
+INSERT INTO Comments (CommentID, UserID, TweetID, FK_CommentID, Content) VALUES ('30003', '10004', '20003', null, 'Because hell has to fill the torturer positions first.');
+INSERT INTO Comments (CommentID, UserID, TweetID, FK_CommentID, Content) VALUES ('30004', '10006', '20004', null, 'Or as fun as making out with a pillow.');
+INSERT INTO Comments (CommentID, UserID, TweetID, FK_CommentID, Content) VALUES ('30005', '10007', null, '30002', 'No no no, you ask from others what is good for them.');
+INSERT INTO Comments (CommentID, UserID, TweetID, FK_CommentID, Content) VALUES ('30006', '10008', null, '30003', 'This sounds like the typical corporate ladder, where the first ones become executives and managers.');
+INSERT INTO Comments (CommentID, UserID, TweetID, FK_CommentID, Content) VALUES ('30007', '10009', null, '30001', 'Does Mickey Mouse live in Duckburg or Mouseton?');
+INSERT INTO Comments (CommentID, UserID, TweetID, FK_CommentID, Content) VALUES ('30008', '10008', null, '30002', "Or never do anything so you don't accidentally do anything bad.");
+INSERT INTO Comments (CommentID, UserID, TweetID, FK_CommentID, Content) VALUES ('30009', '10009', '20008', null, 'The new way to handle bedhair?');
+INSERT INTO Comments (CommentID, UserID, TweetID, FK_CommentID, Content) VALUES ('30010', '10010', '20009', null, 'I think you dropped the last screw from your brain.');
+
+CREATE TABLE Hashtag 
+(
+    HashtagID	INT PRIMARY KEY,
+    Content	VARCHAR(50)
+    
+);
+
+INSERT INTO Hashtag (HashtagID, Content) VALUES ('40001', '#win');
+INSERT INTO Hashtag (HashtagID, Content) VALUES ('40002', '#friends');
+INSERT INTO Hashtag (HashtagID, Content) VALUES ('40003', '#funny');
+INSERT INTO Hashtag (HashtagID, Content) VALUES ('40004', '#giveaway');
+INSERT INTO Hashtag (HashtagID, Content) VALUES ('40005', '#contest');
+INSERT INTO Hashtag (HashtagID, Content) VALUES ('40006', '#thursdaythoughts');
+INSERT INTO Hashtag (HashtagID, Content) VALUES ('40007', '#traveltuesday');
+INSERT INTO Hashtag (HashtagID, Content) VALUES ('40008', '#science');
+INSERT INTO Hashtag (HashtagID, Content) VALUES ('40009', '#fitness');
+INSERT INTO Hashtag (HashtagID, Content) VALUES ('40010', '#goals');
+
+CREATE TABLE HashtagsInContent 
+(
+    HashtagID	INT NOT NULL,
+    TweetID	INT,
+    CommentID	INT,
+    FOREIGN KEY (HashtagID) REFERENCES Hashtag (HashtagID) ON DELETE CASCADE,
+    FOREIGN KEY (TweetID) REFERENCES Tweet (TweetID) ON DELETE CASCADE,
+    FOREIGN KEY (CommentID) REFERENCES Comments (CommentID) ON DELETE CASCADE
+
+);
+
+INSERT INTO HashtagsInContent (HashtagID, TweetID, CommentID) VALUES ('40001', '20003', null);
+INSERT INTO HashtagsInContent (HashtagID, TweetID, CommentID) VALUES ('40002', '20004', null);
+INSERT INTO HashtagsInContent (HashtagID, TweetID, CommentID) VALUES ('40003', '20005', null);
+INSERT INTO HashtagsInContent (HashtagID, TweetID, CommentID) VALUES ('40004', '20006', null);
+INSERT INTO HashtagsInContent (HashtagID, TweetID, CommentID) VALUES ('40005', null, '30006');
+INSERT INTO HashtagsInContent (HashtagID, TweetID, CommentID) VALUES ('40006', null, '30007');
+INSERT INTO HashtagsInContent (HashtagID, TweetID, CommentID) VALUES ('40007', null, '30008');
+INSERT INTO HashtagsInContent (HashtagID, TweetID, CommentID) VALUES ('40008', null, '30009');
+INSERT INTO HashtagsInContent (HashtagID, TweetID, CommentID) VALUES ('40009', null, '30010');
+INSERT INTO HashtagsInContent (HashtagID, TweetID, CommentID) VALUES ('40010', '20002', null);
+INSERT INTO HashtagsInContent (HashtagID, TweetID, CommentID) VALUES ('40003', '20003', null);
+INSERT INTO HashtagsInContent (HashtagID, TweetID, CommentID) VALUES ('40004', null, '30004');
+INSERT INTO HashtagsInContent (HashtagID, TweetID, CommentID) VALUES ('40005', '20010', null);
+INSERT INTO HashtagsInContent (HashtagID, TweetID, CommentID) VALUES ('40006', '20004', null);
+INSERT INTO HashtagsInContent (HashtagID, TweetID, CommentID) VALUES ('40008', null, '30003');
+INSERT INTO HashtagsInContent (HashtagID, TweetID, CommentID) VALUES ('40009', null, '30004');
+INSERT INTO HashtagsInContent (HashtagID, TweetID, CommentID) VALUES ('40010', null, '30005');
+
+CREATE TABLE Likes 
+(
+    LikeID	INT NOT NULL,
+    UserID	INT NOT NULL,
+    TweetID	INT,
+    CommentID	INT,
+    PRIMARY KEY (LikeID),
+    FOREIGN KEY (UserID) REFERENCES User (UserID) ON DELETE CASCADE,
+    FOREIGN KEY (TweetID) REFERENCES Tweet (TweetID) ON DELETE CASCADE,
+    FOREIGN KEY (CommentID) REFERENCES Comments (CommentID) ON DELETE CASCADE
+);
+
+INSERT INTO Likes (LikeID, UserID, TweetID, CommentID) VALUES ('50001', '10010', '20003', null);
+INSERT INTO Likes (LikeID, UserID, TweetID, CommentID) VALUES ('50002', '10008', '20005', null);
+INSERT INTO Likes (LikeID, UserID, TweetID, CommentID) VALUES ('50003', '10005', null, '30005');
+INSERT INTO Likes (LikeID, UserID, TweetID, CommentID) VALUES ('50004', '10010', null, '30007');
+INSERT INTO Likes (LikeID, UserID, TweetID, CommentID) VALUES ('50005', '10007', '20010', null);
+INSERT INTO Likes (LikeID, UserID, TweetID, CommentID) VALUES ('50006', '10001', null, '30007');
+INSERT INTO Likes (LikeID, UserID, TweetID, CommentID) VALUES ('50007', '10003', null, '30003');
+INSERT INTO Likes (LikeID, UserID, TweetID, CommentID) VALUES ('50008', '10005', '20009', null);
+INSERT INTO Likes (LikeID, UserID, TweetID, CommentID) VALUES ('50009', '10009', '20010', null);
+INSERT INTO Likes (LikeID, UserID, TweetID, CommentID) VALUES ('50010', '10010', '20010', null);
+
+
+
+INSERT INTO UserCommentCommentedOn (User, Comment, CommentedOn) VALUES ('User', 'Comment', 'Commented on');
+SELECT * FROM UserCommentCommentedOn;
+SELECT Username, Content, FK_CommentID FROM
+(SELECT * FROM User inner JOIN Comments ON User.UserID = Comments.UserID)
+where FK_CommentID IS not null ORDER BY Username
+
+
+CREATE TRIGGER hashtag_not_allowed BEFORE INSERT ON Hashtag
+BEGIN
+  SELECT RAISE(ABORT, "Mayonnaise detected!") WHERE NEW.Content LIKE '%#mayonnaise%';
+END;
+
+Create VIEW Comments_of_comments as
+SELECT Username as User, Content as Comment, FK_CommentID as 'Commented on' FROM
+(SELECT * FROM User inner JOIN Comments ON User.UserID = Comments.UserID)
+where FK_CommentID IS not null ORDER BY Username
